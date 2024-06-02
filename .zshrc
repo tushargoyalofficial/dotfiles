@@ -75,6 +75,9 @@ zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'eza -1a --color=always $rea
 
 # Aliases
 alias ls='ls --color'
+alias ll='ls -lt --color '
+alias lla='ls -alt --color'
+alias v='nvim'
 alias vim='nvim'
 alias c='clear'
 alias la=tree
@@ -111,19 +114,6 @@ alias ....="cd ../../.."
 alias .....="cd ../../../.."
 alias ......="cd ../../../../.."
 
-# GO
-export GOPATH='/Users/omerhamerman/go'
-
-# VIM
-alias v="/opt/homebrew/bin/nvim"
-
-# Nmap
-alias nm="nmap -sC -sV -oN nmap"
-
-export PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Users/omer/.vimpkg/bin:${GOPATH}/bin:/Users/omerhamerman/.cargo/bin
-
-alias cl='clear'
-
 # K8S
 export KUBECONFIG=~/.kube/config
 alias k="kubectl"
@@ -154,6 +144,9 @@ alias lt="eza --tree --level=2 --long --icons --git"
 # Shell integration
 eval "$(fzf --zsh)"
 eval "$(zoxide init --cmd cd zsh)"
+
+export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh

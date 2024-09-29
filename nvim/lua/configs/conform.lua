@@ -1,16 +1,21 @@
 local options = {
   formatters_by_ft = {
     lua = { "stylua" },
-    javascript = { "prettierd" },
-    javascriptreact = { "prettierd" },
-    typescript = { "prettierd" },
-    typescriptreact = { "prettierd" },
-    css = { "prettierd" },
-    html = { "prettierd" },
-    json = { "prettierd" },
+
+    javascript = { "biome" },
+    javascriptreact = { "biome" },
+    typescript = { "biome" },
+    typescriptreact = { "biome" },
+
+    css = { "biome" },
+    html = { "biome" },
+    json = { "biome" },
+    jsonc = { "biome" },
+
     sh = { "shfmt" },
     python = { "black" },
     dart = { "dart_format" },
+    yaml = { "yamlfmt" },
   },
 
   format_on_save = {
@@ -20,4 +25,4 @@ local options = {
   },
 }
 
-require("conform").setup(options)
+return options

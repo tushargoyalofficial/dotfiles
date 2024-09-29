@@ -1,21 +1,27 @@
--- This file  needs to have same structure as nvconfig.lua
--- https://github.com/NvChad/NvChad/blob/v2.5/lua/nvconfig.lua
+-- This file needs to have same structure as nvconfig.lua 
+-- https://github.com/NvChad/ui/blob/v2.5/lua/nvconfig.lua
+-- Please read that file to know all available options :( 
 
 ---@type ChadrcConfig
 local M = {}
 
-M.ui = {
-  theme = "bearded-arc", -- default theme
-  theme_toggle = { "bearded-arc", "gruvbox_light" },
-  transparency = false,
+M.base46 = {
+	theme = "catppuccin", -- default theme
+  theme_toggle = { "catppuccin", "gruvbox_light" },
+  transparency = true,
 
-  -- hl_override = {
-  -- 	Comment = { italic = true },
-  -- 	["@comment"] = { italic = true },
-  -- },
-  nvdash = {
+	nvdash = {
     load_on_startup = true,
   },
+
+	cmp = {
+    style = "atom",
+  },
+
+	-- hl_override = {
+	-- 	Comment = { italic = true },
+	-- 	["@comment"] = { italic = true },
+	-- },
 }
 
 return M

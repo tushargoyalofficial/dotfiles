@@ -2,7 +2,7 @@ return {
   -- format
   {
     "stevearc/conform.nvim",
-    event = 'BufWritePre', -- uncomment for format on save
+    event = "BufWritePre", -- uncomment for format on save
     opts = require "configs.conform",
   },
 
@@ -24,6 +24,7 @@ return {
         "stylua",
 
         -- web dev stuff
+        "biome",
         "css-lsp",
         "dockerfile-language-server",
         "eslint_d",

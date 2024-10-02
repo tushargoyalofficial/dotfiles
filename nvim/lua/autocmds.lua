@@ -2,7 +2,6 @@ require "nvchad.autocmds"
 
 local autocmd = vim.api.nvim_create_autocmd
 
-
 --------------------st terminal dynamic padding--------------------
 
 -- replace string from file

@@ -7,8 +7,8 @@ local options = {
     typescript = { "biome" },
     typescriptreact = { "biome" },
 
-    css = { "biome" },
-    html = { "biome" },
+    css = { "prettierd" },
+    html = { "prettierd" },
     json = { "biome" },
     jsonc = { "biome" },
 

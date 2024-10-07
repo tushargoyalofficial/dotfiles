@@ -9,20 +9,16 @@ M.base46 = {
   theme = "catppuccin", -- default theme
   theme_toggle = { "catppuccin", "gruvbox_light" },
   transparency = true,
+}
 
-  nvdash = {
-    load_on_startup = true,
-  },
-
+M.ui = {
   cmp = {
-    style = "atom",
+    style = "atom_colored",
   },
+}
 
-  -- hl_override = {
-  -- 	Comment = { italic = true },
-  -- 	["@comment"] = { italic = true },
-  -- },
+M.nvdash = {
+  load_on_startup = true,
 }
 
 return M
-

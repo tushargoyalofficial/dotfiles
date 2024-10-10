@@ -11,7 +11,11 @@
 	"modules": [
 		{
 			"type": "custom",
-			"format": "┌──────────── Hardware Information ────────────┐"
+			"format": "                 バニーコンピューター                "
+		},
+		{
+			"type": "custom",
+			"format": "┌─────────────── Hardware Information ───────────────┐"
 		},
 		{
 			"type": "cpu",
@@ -43,7 +47,7 @@
 		"break",
 		{
 			"type": "custom",
-			"format": "├──────────── Software Information ────────────┤"
+			"format": "├─────────────── Software Information ───────────────┤"
 		},
 		{
 			"type": "os",
@@ -82,7 +86,7 @@
 		},
 		{
 			"type": "custom",
-			"format": "└──────────────────────────────────────────────┘"
+			"format": "└────────────────────────────────────────────────────┘"
 		},
 		"break",
 		{

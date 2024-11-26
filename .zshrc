@@ -8,12 +8,10 @@ if [ ! -d "$ZINIT_HOME" ]; then
   git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
 fi
 
-# Source/Load zinit
-source "${ZINIT_HOME}/zinit.zsh"
 # SETTING THE PLUGIN MANAGER ZINIT ===================================
 
-# Add in Powerlevel10K
-zinit ice depth=1; zinit light romkatv/powerlevel10k
+# Source/Load zinit
+source "${ZINIT_HOME}/zinit.zsh"
 
 # Add in zsh plugins
 zinit light zsh-users/zsh-syntax-highlighting
@@ -79,18 +77,18 @@ alias cat=bat
 # Git
 alias gc="git commit -m"
 alias gca="git commit -a -m"
-alias gp="git push origin HEAD"
-alias gpu="git pull origin"
+alias gps="git push origin HEAD"
+alias gpl="git pull origin"
 alias gst="git status"
 alias glog="git log --graph --topo-order --pretty='%w(100,0,6)%C(yellow)%h%C(bold)%C(black)%d %C(cyan)%ar %C(green)%an%n%C(bold)%C(white)%s %N' --abbrev-commit"
-alias gdiff="git diff"
+alias gdf="git diff"
 alias gco="git checkout"
 alias gb='git branch'
 alias gba='git branch -a'
-alias gadd='git add'
-alias ga='git add -p'
+alias ga='git add'
+alias gap='git add -p'
 alias gcoall='git checkout -- .'
-alias gr='git remote'
+alias grt='git remote'
 alias gre='git reset'
 
 # Docker
@@ -134,9 +132,35 @@ bindkey jj vi-cmd-mode
 alias l="eza -l --icons --git -a"
 alias lt="eza --tree --level=2 --long --icons --git"
 
+# Add JAVA and Android SDK to search path
+DEV_TOOLS="/home/$USER/DevTools"
+JAVA_HOME="$DEV_TOOLS/JDK/jdk-17.0.12+7"
+ANDROID_HOME="$DEV_TOOLS/Android/Sdk"
+
+export JAVA_HOME
+export ANDROID_HOME
+
+PATH="$HOME/.local/bin:$PATH"
+PATH="$JAVA_HOME/bin:$PATH"
+PATH="$ANDROID_HOME/cmdline-tools/tools/bin:$PATH"
+PATH="$ANDROID_HOME/platform-tools:$PATH"
+PATH="$ANDROID_HOME/tools:$PATH"
+PATH="$ANDROID_HOME/emulator:$PATH"
+PATH="$DEV_TOOLS/flutter/bin:$PATH"
+PATH="$HOME/.pub-cache/bin:$PATH"
+
 # Shell integration
 eval "$(fzf --zsh)"
 eval "$(zoxide init --cmd cd zsh)"
+eval "$(oh-my-posh init zsh --config ~/.cache/oh-my-posh/themes/pure.omp.json)"
 
-export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
+# Add NVM SH completions to search path
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+# DENO config
+. "$HOME/.deno/env"
+
+# Add deno completions to search path
+if [[ ":$FPATH:" != *":$USER/.zsh/completions:"* ]]; then export FPATH="$USER/.zsh/completions:$FPATH"; fi

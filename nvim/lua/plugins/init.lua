@@ -26,6 +26,7 @@ return {
         -- web dev stuff
         "biome",
         "css-lsp",
+        "deno",
         "dockerfile-language-server",
         "eslint_d",
         "html-lsp",
@@ -37,9 +38,6 @@ return {
         "yamlfmt",
 
         -- python stuff
-        "black",
-        "mypy",
-        "pyright",
         "ruff",
 
         -- shell

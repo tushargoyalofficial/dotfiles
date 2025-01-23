@@ -12,7 +12,7 @@ local servers = {
   "html",
   "jsonls",
   "prismals",
-  "pyright",
+  "ruff",
   "tailwindcss",
   "ts_ls",
 }
@@ -33,4 +33,3 @@ lspconfig.ts_ls.setup {
   on_init = nvlsp.on_init,
   capabilities = nvlsp.capabilities,
 }
-

@@ -1,0 +1,69 @@
+# font
+font-family = JetBrainsMono Nerd Font Mono
+font-size = 12
+adjust-cell-height = 35%
+
+# clipboard
+clipboard-read = allow
+clipboard-write = allow
+clipboard-trim-trailing-spaces = true
+copy-on-select = true
+
+# ui
+theme = catppuccin-mocha
+cursor-style = block
+background-opacity = 0.6
+background-blur-radius = 20
+auto-update = check
+
+# mouse
+mouse-hide-while-typing = true
+mouse-scroll-multiplier = 2
+
+# window
+window-width = 140
+window-height = 30
+window-decoration = true
+window-padding-balance = true
+window-save-state = always
+window-colorspace = "display-p3"
+macos-titlebar-style = transparent
+
+# tabs
+keybind = ctrl+s>c=new_tab
+keybind = ctrl+s>shift+l=next_tab
+keybind = ctrl+s>shift+h=previous_tab
+keybind = ctrl+s>comma=move_tab:-1
+keybind = ctrl+s>period=move_tab:1
+
+
+# quick tab switch
+keybind = ctrl+space>1=goto_tab:1
+keybind = ctrl+space>2=goto_tab:2
+keybind = ctrl+space>3=goto_tab:3
+keybind = ctrl+space>4=goto_tab:4
+keybind = ctrl+space>5=goto_tab:5
+keybind = ctrl+space>6=goto_tab:6
+keybind = ctrl+space>7=goto_tab:7
+keybind = ctrl+space>8=goto_tab:8
+keybind = ctrl+space>9=goto_tab:9
+
+# split
+keybind = ctrl+space>\=new_split:right
+keybind = ctrl+space>-=new_split:down
+keybind = ctrl+space>j=goto_split:bottom
+keybind = ctrl+space>k=goto_split:top
+keybind = ctrl+space>h=goto_split:left
+keybind = ctrl+space>l=goto_split:right
+keybind = ctrl+space>z=toggle_split_zoom
+keybind = ctrl+space>e=equalize_splits
+
+# others
+quick-terminal-position = top
+shell-integration-features = no-cursor,sudo,no-title
+shell-integration = zsh
+keybind = global:ctrl+grave_accent=toggle_quick_terminal
+keybind = ctrl+space>r=reload_config
+keybind = ctrl+space>x=close_surface
+keybind = ctrl+space>n=new_window
+keybind = ctrl+space>i=inspector:toggle

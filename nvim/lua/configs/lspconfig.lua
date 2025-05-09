@@ -7,7 +7,6 @@ local servers = {
   "eslint",
   "html",
   "jsonls",
-  "prismals",
   "pyright",
   "ruff",
   "tailwindcss",

@@ -7,15 +7,16 @@ local options = {
     typescript = { "biome" },
     typescriptreact = { "biome" },
 
-    css = { "prettierd" },
-    html = { "prettierd" },
+    css = { "biome" },
+    html = { "biome" },
     json = { "biome" },
     jsonc = { "biome" },
 
     sh = { "shfmt" },
     python = {
-      "ruff_fix", -- To fix lint errors. (ruff with argument --fix)
-      "ruff_format", -- To run the formatter. (ruff with argument format) },
+      "isort",
+      "ruff_fix",
+      "ruff_format",
     },
     dart = { "dart_format" },
     yaml = { "yamlfmt" },

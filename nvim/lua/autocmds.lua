@@ -1,49 +1,32 @@
 require "nvchad.autocmds"
 
 local autocmd = vim.api.nvim_create_autocmd
+local replace_word = require("nvchad.utils").replace_word
 
---------------------st terminal dynamic padding--------------------
+-- Dynamic terminal padding for st, Kitty, and Ghostty terminals
+autocmd({ "VimEnter", "VimLeave" }, {
+  callback = function(args)
+    local term_program = vim.env.TERM_PROGRAM
 
--- replace string from file
-local function sed(from, to, fname)
-  vim.cmd(string.format("silent !sed -i 's/%s/%s/g' %s", from, to, fname))
-end
-
--- reloads xresources for current focused window onl
-local function liveReload_xresources()
-  vim.cmd "silent !xrdb -merge ~/.Xresources"
-  vim.cmd "silent !kill -USR1 $(xprop -id $(xdotool getwindowfocus) | grep '_NET_WM_PID' | grep -oE '[[:digit:]]*$')"
-end
-
--- Dynamic terminal padding with/without nvim (for siduck's st only)
-autocmd({ "BufNewFile", "BufRead" }, {
-  callback = function(ctx)
-    -- remove terminal padding
-    -- keep padding when nvim has only 1 buffer
-
-    if #vim.fn.getbufinfo { buflisted = 1 } > 1 then
-      sed("st.borderpx: 20", "st.borderpx: 0", "~/.Xresources")
-      liveReload_xresources()
-
-      -- revert xresources change but dont reload it
-      sed("st.borderpx: 0", "st.borderpx: 20", "~/.Xresources")
-
-      vim.cmd "silent !xrdb -merge ~/.Xresources"
-      vim.api.nvim_del_autocmd(ctx.id)
+    if term_program == "st" then
+      -- For st terminal: Adjust borderpx in .Xresources
+      local oldword = args.event == "VimEnter" and 20 or 0
+      local newword = args.event == "VimEnter" and 0 or 20
+      replace_word("st.borderpx: " .. oldword, "st.borderpx: " .. newword, "/home/siduck/dotfiles/.Xresources")
+      vim.cmd "silent !xrdb -merge ~/dotfiles/.Xresources"
+      vim.cmd "silent !kill -USR1 $(xprop -id $(xdotool getwindowfocus) | grep '_NET_WM_PID' | grep -oE '[[:digit:]]*$')"
+    elseif term_program == "kitty" then
+      -- For Kitty terminal: Use remote control to set spacing
+      -- Kitty config: allow_remote_control yes
+      local margin = args.event == "VimEnter" and 0 or 20
+      local kitty_window_id = vim.env.KITTY_WINDOW_ID
+      if kitty_window_id then
+        local cmd = string.format("kitty @ --to %s set-spacing margin=%d", kitty_window_id, margin)
+        vim.cmd("silent !" .. cmd)
+      end
+    elseif term_program == "ghostty" then
+      -- For Ghostty terminal: Dynamic padding change is not supported
+      print "Dynamic padding change is not supported for Ghostty terminal."
     end
   end,
-})
-
--- add terminal padding
-autocmd("VimLeavePre", {
-  callback = function()
-    sed("st.borderpx: 0", "st.borderpx: 20", "~/.Xresources")
-    liveReload_xresources()
-  end,
-})
-
-----------------------------------------
-
-autocmd("TermOpen", {
-  command = "setlocal signcolumn=no",
 })

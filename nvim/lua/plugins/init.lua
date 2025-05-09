@@ -1,12 +1,107 @@
+--@type NvPluginSpec[]
 return {
-  -- format
+
+  --------------------------------------- default plugins -----------------------------------------
+
   {
-    "stevearc/conform.nvim",
-    event = "BufWritePre", -- uncomment for format on save
-    opts = require "configs.conform",
+    "rachartier/tiny-glimmer.nvim",
+    keys = { "u", "<c-r>" },
+    opts = {
+      overwrite = {
+        redo = {
+          enabled = true,
+          default_animation = {
+            settings = {
+              from_color = "DiffAdd",
+            },
+          },
+        },
+
+        undo = {
+          enabled = true,
+          default_animation = {
+            settings = {
+              from_color = "DiffDelete",
+            },
+          },
+        },
+      },
+    },
   },
 
-  -- lsp
+  {
+    "nvzone/typr",
+    cmd = { "Typr", "TyprStats" },
+    opts = {
+      wpm_goal = 120,
+      stats_filepath = vim.fn.stdpath "data" .. "/config",
+    },
+  },
+
+  { "nvzone/minty", opts = {} },
+
+  { "nvzone/showkeys", cmd = "ShowkeysToggle" },
+
+  {
+    "nvzone/timerly",
+    opts = {
+      on_start = function()
+        vim.notify "Timerly started"
+      end,
+      on_finish = function()
+        vim.cmd "silent !doas rtcwake -s 300 -m mem"
+      end,
+    },
+    cmd = "TimerlyToggle",
+  },
+
+  {
+    "hrsh7th/nvim-cmp",
+    dependencies = {
+      {
+        "supermaven-inc/supermaven-nvim",
+        opts = {},
+      },
+      {
+        -- snippet plugin
+        "L3MON4D3/LuaSnip",
+        config = function(_, opts)
+          require("luasnip").config.set_config(opts)
+
+          local luasnip = require "luasnip"
+
+          luasnip.filetype_extend("javascriptreact", { "html" })
+          luasnip.filetype_extend("typescriptreact", { "html" })
+
+          require "nvchad.configs.luasnip"
+        end,
+      },
+      {
+        "hrsh7th/cmp-cmdline",
+        event = "CmdlineEnter",
+        config = function()
+          local cmp = require "cmp"
+
+          cmp.setup.cmdline("/", {
+            mapping = cmp.mapping.preset.cmdline(),
+            sources = { { name = "buffer" } },
+          })
+
+          cmp.setup.cmdline(":", {
+            mapping = cmp.mapping.preset.cmdline(),
+            sources = cmp.config.sources({ { name = "path" } }, { { name = "cmdline" } }),
+            matching = { disallow_symbol_nonprefix_matching = false },
+          })
+        end,
+      },
+    },
+
+    opts = function(_, opts)
+      opts.sources[1].trigger_characters = { "-" }
+      table.insert(opts.sources, 1, { name = "supermaven" })
+    end,
+  },
+
   {
     "neovim/nvim-lspconfig",
     config = function()
@@ -14,42 +109,14 @@ return {
     end,
   },
 
-  -- install lsp plugins
   {
-    "williamboman/mason.nvim",
-    opts = {
-      ensure_installed = {
-        -- lua stuff
-        "lua-language-server",
-        "stylua",
-
-        -- web dev stuff
-        "biome",
-        "css-lsp",
-        "deno",
-        "dockerfile-language-server",
-        "eslint_d",
-        "html-lsp",
-        "json-lsp",
-        "prisma-language-server",
-        "prettierd",
-        "tailwindcss-language-server",
-        "typescript-language-server",
-        "yamlfmt",
-
-        -- python stuff
-        "pyright",
-        "ruff",
-
-        -- shell
-        "shfmt",
-        "shellcheck",
-        "bash-language-server",
-      },
-    },
+    "stevearc/conform.nvim",
+    event = "BufWritePre",
+    opts = function()
+      return require "configs.conform"
+    end,
   },
 
-  -- install ts plugins
   {
     "nvim-treesitter/nvim-treesitter",
     opts = {
@@ -73,107 +140,48 @@ return {
         "vim",
         "yaml",
       },
-
-      highlight = {
-        enable = true,
-      },
-
-      indent = {
-        enable = true,
-      },
-
-      autotag = {
-        enable = true,
-        enable_rename = true,
-        enable_close = true,
-        enable_close_on_slash = true,
-        filetypes = {
-          "javascript",
-          "javascriptreact",
-          "typescript",
-          "typescriptreact",
-          "html",
-          "svelte",
-          "vue",
-          "markdown",
-        },
-      },
-
-      incremental_selection = {
-        enable = true,
-        keymaps = {
-          init_selection = "gnn",
-          node_incremental = "grn",
-          scope_incremental = "grc",
-          node_decremental = "grm",
-        },
-      },
     },
     dependencies = {
       {
         "windwp/nvim-ts-autotag",
         config = function()
-          require "nvim-ts-autotag"
+          require("nvim-ts-autotag").setup()
         end,
       },
     },
   },
 
+  --------------------------------------------- custom plugins ----------------------------------------------
   -- smooth scroll
   {
     "karb94/neoscroll.nvim",
     keys = { "<C-d>", "<C-u>" },
     config = function()
-      require "neoscroll"
+      require("neoscroll").setup {}
     end,
   },
 
-  -- dim inactive windows
-  {
-    "andreadev-it/shade.nvim",
-    config = function()
-      require("shade").setup {
-        exclude_filetypes = { "NvimTree" },
-      }
-    end,
-  },
+  { "folke/trouble.nvim", cmd = "Trouble", opts = {} },
+  { "elkowar/yuck.vim", ft = "yuck", dependencies = "gpanders/nvim-parinfer" },
 
-  -- pretty diagnostics panel
-  {
-    "folke/trouble.nvim",
-    cmd = { "Trouble", "TodoTrouble" },
-    dependencies = {
-      {
-        "folke/todo-comments.nvim",
-        opts = {},
-      },
-    },
-    config = function()
-      require "trouble"
-    end,
-  },
-
-  -- file/word search
   {
     "nvim-telescope/telescope.nvim",
     opts = {
-      extensions_list = { "fzf", "terms", "nerdy", "media" },
-
       extensions = {
-        media = {
-          backend = "ueberzug",
+        fzf = {
+          fuzzy = true,
+          override_generic_sorter = true,
+          override_file_sorter = true,
+          case_mode = "smart_case",
         },
       },
     },
 
     dependencies = {
       { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
-      "2kabhishek/nerdy.nvim",
-      "dharmx/telescope-media.nvim",
+      { "2kabhishek/nerdy.nvim" },
     },
   },
 
-  "NvChad/nvcommunity",
-
-  { import = "nvcommunity.editor.telescope-undo" },
+  { import = "nvchad.blink.lazyspec" },
 }

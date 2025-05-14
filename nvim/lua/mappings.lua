@@ -15,6 +15,15 @@ map({ "n", "t" }, "<A-i>", function()
   }
 end, { desc = "terminal toggle floating term" })
 
+map("n", "<leader>whi", "<C-w>+", { desc = "Increase window height" })
+map("n", "<leader>whd", "<C-w>-", { desc = "Decrease window height" })
+map("n", "<leader>wwi", "<C-w>>", { desc = "Increase window width" })
+map("n", "<leader>wwd", "<C-w><", { desc = "Decrease window width" })
+
+map("n", "<leader>de", function()
+  vim.diagnostic.open_float(nil, { focus = false, scope = "line" })
+end, { desc = "Show line diagnostics" })
+
 map({ "n", "v" }, "<RightMouse>", function()
   require("menu.utils").delete_old_menus()
   -- vim.cmd.exec '"normal! G"'

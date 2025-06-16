@@ -125,6 +125,7 @@ return {
         "bash",
         "dart",
         "dockerfile",
+        "go",
         "html",
         "javascript",
         "json",
@@ -180,6 +181,19 @@ return {
     dependencies = {
       { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
       { "2kabhishek/nerdy.nvim" },
+    },
+  },
+
+  {
+    "mason-org/mason.nvim",
+    opts = {
+      ui = {
+        icons = {
+          package_installed = "✓",
+          package_pending = "➜",
+          package_uninstalled = "✗",
+        },
+      },
     },
   },
 

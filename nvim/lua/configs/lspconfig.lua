@@ -5,6 +5,7 @@ local servers = {
   "dartls",
   "dockerls",
   "eslint",
+  "gopls",
   "html",
   "jsonls",
   "pyright",

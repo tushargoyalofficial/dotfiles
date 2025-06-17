@@ -469,7 +469,16 @@ fi
 
 # oh-my-posh prompt
 if command -v oh-my-posh >/dev/null 2>&1; then
-    eval "$(oh-my-posh init zsh --config ~/.cache/oh-my-posh/themes/pure.omp.json)"
+    # Try to find the theme file in platform-specific locations
+    if command -v brew >/dev/null 2>&1 && [[ -f "$(brew --prefix oh-my-posh)/themes/pure.omp.json" ]]; then
+        # macOS with Homebrew - use dynamic brew prefix
+        eval "$(oh-my-posh init zsh --config $(brew --prefix oh-my-posh)/themes/pure.omp.json)"
+    elif [[ -f "$HOME/.cache/oh-my-posh/themes/pure.omp.json" ]]; then
+        # Linux or other locations
+        eval "$(oh-my-posh init zsh --config $HOME/.cache/oh-my-posh/themes/pure.omp.json)"
+    else
+        echo "oh-my-posh theme file not found in expected locations"
+    fi
 fi
 
 # ============================================================================

@@ -1,0 +1,13 @@
+Run command in powershell
+
+notepad $env:USERPROFILE\.wslconfig
+
+to open wsl config file in notepad
+
+paste this:
+
+[wsl2]
+defaultVhdSize=536870912000
+kernelCommandLine = cgroup_no_v1=all systemd.unified_cgroup_hierarchy=1
+networkingMode=mirrored
+

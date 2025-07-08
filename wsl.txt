@@ -1,13 +1,35 @@
-Run command in powershell
+# Run command in powershell
 
 notepad $env:USERPROFILE\.wslconfig
 
-to open wsl config file in notepad
-
-paste this:
+# to open wsl config file in notepad
+# paste this:
 
 [wsl2]
-defaultVhdSize=536870912000
 kernelCommandLine = cgroup_no_v1=all systemd.unified_cgroup_hierarchy=1
 networkingMode=mirrored
+dnsTunneling=true
+firewall=false
+autoProxy=true
+[experimental]
+hostAddressLoopback=true
+bestEffortDnsParsing=true
 
+
+
+# Check the Hyper-V firewall
+Get-NetFirewallHyperVVMCreator
+
+# Output of above command
+Get-NetFirewallHyperVVMCreator
+VMCreatorId : {40E0AC32-46A5-438A-A0B2-2B479E8F2E90}
+FriendlyName : WSL
+
+# Get the Hyper-V firewall settings:
+Get-NetFirewallHyperVVMSetting -PolicyStore ActiveStore -Name '{40E0AC32-46A5-438A-A0B2-2B479E8F2E90}'
+
+# if DefaultInboundAction is Blocked, we have to allow it.
+Set-NetFirewallHyperVVMSetting -Name '{40E0AC32-46A5-438A-A0B2-2B479E8F2E90}' -DefaultInboundAction Allow
+# Run the above command in admin priveleges
+
+# restart wsl2 os

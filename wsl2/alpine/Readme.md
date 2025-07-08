@@ -13,7 +13,7 @@ wsl -d ALpine
 ## Install some apps:
 ```sh
 apk update && apk upgrade
-apk add vim git wget curl nano openrc
+apk add vim git wget curl nano openrc iproute2 bash
 ```
 ## Edit some files
 

@@ -48,7 +48,7 @@ add_to_path "$HOME/.local/bin"
 
 # Development Tools
 DEV_TOOLS="$HOME/DevTools"
-JAVA_HOME="$DEV_TOOLS/JDK/jdk-17.0.12+7"
+JAVA_HOME="$DEV_TOOLS/JDK/jdk-21.0.7+6"
 ANDROID_HOME="$DEV_TOOLS/Android/Sdk"
 
 export JAVA_HOME
@@ -75,6 +75,7 @@ fi
 # GO LANG
 if [[ -d "/usr/local/go/bin" ]]; then
     add_to_path "/usr/local/go/bin"
+    add_to_path "$HOME/go/bin"
 fi
 
 # Rust/Cargo

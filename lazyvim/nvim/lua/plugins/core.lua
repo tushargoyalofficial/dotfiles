@@ -2,66 +2,59 @@ return {
   -- use mini.starter instead of alpha
   -- { import = "lazyvim.plugins.extras.ui.mini-starter" },
 
-  -- add jsonls and schemastore packages, and setup treesitter for json, json5 and jsonc
-  -- { import = "lazyvim.plugins.extras.lang.json" },
-
-  -- for typescript, LazyVim also includes extra specs to properly setup lspconfig,
-  -- treesitter, mason and typescript.nvim. So instead of the above, you can use:
-  -- { import = "lazyvim.plugins.extras.lang.typescript" },
-
   -- add catppuccin
-    {
-      "catppuccin/nvim",
-      lazy = true,
-      name = "catppuccin",
-      opts = {
-        lsp_styles = {
-          underlines = {
-            errors = { "undercurl" },
-            hints = { "undercurl" },
-            warnings = { "undercurl" },
-            information = { "undercurl" },
-          },
-        },
-        integrations = {
-          aerial = true,
-          alpha = true,
-          cmp = true,
-          dashboard = true,
-          flash = true,
-          fzf = true,
-          grug_far = true,
-          gitsigns = true,
-          headlines = true,
-          illuminate = true,
-          indent_blankline = { enabled = true },
-          leap = true,
-          lsp_trouble = true,
-          mason = true,
-          mini = true,
-          navic = { enabled = true, custom_bg = "lualine" },
-          neotest = true,
-          neotree = true,
-          noice = true,
-          notify = true,
-          snacks = true,
-          telescope = true,
-          treesitter_context = true,
-          which_key = true,
+  {
+    "catppuccin/nvim",
+    lazy = true,
+    name = "catppuccin",
+    opts = {
+      lsp_styles = {
+        underlines = {
+          errors = { "undercurl" },
+          hints = { "undercurl" },
+          warnings = { "undercurl" },
+          information = { "undercurl" },
         },
       },
-      specs = {
-        {
-          "akinsho/bufferline.nvim",
-          optional = true,
-          opts = function(_, opts)
-            if (vim.g.colors_name or ""):find("catppuccin") then
-              opts.highlights = require("catppuccin.special.bufferline").get_theme()
-            end
-          end,
-        },
+      integrations = {
+        aerial = true,
+        alpha = true,
+        cmp = true,
+        dashboard = true,
+        flash = true,
+        fzf = true,
+        grug_far = true,
+        gitsigns = true,
+        headlines = true,
+        illuminate = true,
+        indent_blankline = { enabled = true },
+        leap = true,
+        lsp_trouble = true,
+        mason = true,
+        mini = true,
+        navic = { enabled = true, custom_bg = "lualine" },
+        neotest = true,
+        neotree = true,
+        noice = true,
+        notify = true,
+        snacks = true,
+        telescope = true,
+        treesitter_context = true,
+        which_key = true,
       },
     },
+    specs = {
+      {
+        "akinsho/bufferline.nvim",
+        optional = true,
+        opts = function(_, opts)
+          if (vim.g.colors_name or ""):find("catppuccin") then
+            opts.highlights = require("catppuccin.special.bufferline").get_theme()
+          end
+        end,
+      },
+    },
+  },
 
   -- Configure LazyVim to load catppuccin
   {
@@ -82,7 +75,6 @@ return {
   {
     "hrsh7th/nvim-cmp",
     dependencies = { "hrsh7th/cmp-emoji" },
-    ---@param opts cmp.ConfigSchema
     opts = function(_, opts)
       table.insert(opts.sources, { name = "emoji" })
     end,
@@ -126,7 +118,6 @@ return {
     },
     ---@class PluginLspOpts
     opts = {
-      ---@type lspconfig.options
       servers = {
         cssls = {},
         dockerls = {},
@@ -141,7 +132,7 @@ return {
       },
       -- you can do any additional lsp server setup here
       -- return true if you don't want this server to be setup with lspconfig
-      ---@type table<string, fun(server:string, opts:_.lspconfig.options):boolean?>
+      ---@type table<string, fun(server:string, opts):boolean?>
       setup = {
         -- example to setup with typescript.nvim
         ts_ls = function(_, opts)
@@ -215,8 +206,8 @@ return {
     "mason-org/mason-lspconfig.nvim",
     opts = {},
     dependencies = {
-        {"mason-org/mason.nvim", opts = {} },
-        "neovim/nvim-lspconfig",
+      { "mason-org/mason.nvim", opts = {} },
+      "neovim/nvim-lspconfig",
     },
   },
 }

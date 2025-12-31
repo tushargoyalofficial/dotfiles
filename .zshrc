@@ -1,5 +1,5 @@
 # ============================================================================
-# ZSH Configuration File - Enhanced
+# ZSH Configuration - Ultra-Fast & Beautiful
 # ============================================================================
 
 # Early exit for non-interactive shells
@@ -35,12 +35,11 @@ export MANPAGER="nvim +Man!"            # Use nvim for man pages
 # PATH CONFIGURATION
 # ============================================================================
 
+typeset -U path  # Keep unique entries in path
+
 # Function to safely add to PATH
 add_to_path() {
-    case ":$PATH:" in
-        *":$1:"*) ;;
-        *) PATH="$1:$PATH" ;;
-    esac
+    [[ -d "$1" ]] && path=("$1" $path)
 }
 
 # Local binaries
@@ -51,8 +50,7 @@ DEV_TOOLS="$HOME/DevTools"
 JAVA_HOME="$DEV_TOOLS/JDK/jdk-21.0.7+6"
 ANDROID_HOME="$DEV_TOOLS/Android/Sdk"
 
-export JAVA_HOME
-export ANDROID_HOME
+export JAVA_HOME ANDROID_HOME
 
 # Java and Android SDK paths
 if [[ -d "$JAVA_HOME" ]]; then
@@ -79,37 +77,35 @@ if [[ -d "/usr/local/go/bin" ]]; then
 fi
 
 # Rust/Cargo
-if [[ -d "$HOME/.cargo/bin" ]]; then
-    add_to_path "$HOME/.cargo/bin"
-fi
-
-export PATH
+[[ -d "$HOME/.cargo/bin" ]] && add_to_path "$HOME/.cargo/bin"
 
 # ============================================================================
 # ZSH OPTIONS AND SETTINGS
 # ============================================================================
 
 # General ZSH options
-setopt AUTO_CD              # cd by typing directory name if it's not a command
-setopt CORRECT              # Spelling correction for commands
-setopt CORRECT_ALL          # Spelling correction for arguments
-setopt GLOB_DOTS            # Include dotfiles in globbing
-setopt EXTENDED_GLOB        # Extended globbing patterns
-setopt NUMERIC_GLOB_SORT    # Sort numerically when globbing
-setopt NO_CASE_GLOB         # Case insensitive globbing
-setopt RC_EXPAND_PARAM      # Array expansion
-setopt NOTIFY               # Report status of background jobs immediately
-setopt HASH_LIST_ALL        # Hash everything before completion
-setopt COMPLETE_IN_WORD     # Complete from both ends of a word
-setopt ALWAYS_TO_END        # Move cursor to the end of a completed word
-setopt PATH_DIRS            # Perform path search even on command names with slashes
-setopt AUTO_MENU            # Show completion menu on a successive tab press
-setopt AUTO_LIST            # Automatically list choices on ambiguous completion
-setopt AUTO_PARAM_SLASH     # If completed parameter is a directory, add a trailing slash
-setopt FLOW_CONTROL         # Enable output flow control via start/stop characters
+setopt AUTO_CD                  # cd by typing directory name
+setopt CORRECT                  # Spelling correction for commands
+setopt CORRECT_ALL              # Spelling correction for arguments
+setopt GLOB_DOTS                # Include dotfiles in globbing
+setopt EXTENDED_GLOB            # Extended globbing patterns
+setopt NUMERIC_GLOB_SORT        # Sort numerically when globbing
+setopt NO_CASE_GLOB             # Case insensitive globbing
+setopt RC_EXPAND_PARAM          # Array expansion
+setopt NOTIFY                   # Report background jobs immediately
+setopt HASH_LIST_ALL            # Hash everything before completion
+setopt COMPLETE_IN_WORD         # Complete from both ends
+setopt ALWAYS_TO_END            # Move cursor to end after completion
+setopt PATH_DIRS                # Perform path search on commands with slashes
+setopt AUTO_MENU                # Show completion menu on successive tab
+setopt AUTO_LIST                # Automatically list choices
+setopt AUTO_PARAM_SLASH         # Add trailing slash to directories
+setopt FLOW_CONTROL             # Enable output flow control
+setopt NO_BEEP                  # No beeping
+setopt INTERACTIVE_COMMENTS     # Allow comments in interactive mode
 
 # ============================================================================
-# ZSH HISTORY CONFIGURATION
+# HISTORY CONFIGURATION
 # ============================================================================
 
 HISTSIZE=50000
@@ -120,17 +116,17 @@ SAVEHIST=$HISTSIZE
 [[ ! -d "$(dirname "$HISTFILE")" ]] && mkdir -p "$(dirname "$HISTFILE")"
 
 # History options
-setopt EXTENDED_HISTORY         # Write the history file in the ':start:elapsed;command' format
-setopt SHARE_HISTORY            # Share history between all sessions
-setopt HIST_EXPIRE_DUPS_FIRST   # Expire duplicate entries first when trimming history
-setopt HIST_IGNORE_DUPS         # Don't record an entry that was just recorded again
-setopt HIST_IGNORE_ALL_DUPS     # Delete old recorded entry if new entry is a duplicate
-setopt HIST_FIND_NO_DUPS        # Do not display a line previously found
-setopt HIST_IGNORE_SPACE        # Don't record an entry starting with a space
-setopt HIST_SAVE_NO_DUPS        # Don't write duplicate entries in the history file
-setopt HIST_REDUCE_BLANKS       # Remove superfluous blanks before recording entry
-setopt HIST_VERIFY              # Don't execute immediately upon history expansion
-setopt HIST_BEEP                # Beep when accessing non-existent history
+setopt EXTENDED_HISTORY         # Write timestamp format
+setopt SHARE_HISTORY            # Share history between sessions
+setopt HIST_EXPIRE_DUPS_FIRST   # Expire duplicates first
+setopt HIST_IGNORE_DUPS         # Don't record duplicates
+setopt HIST_IGNORE_ALL_DUPS     # Delete old duplicates
+setopt HIST_FIND_NO_DUPS        # Don't display duplicates
+setopt HIST_IGNORE_SPACE        # Don't record entries starting with space
+setopt HIST_SAVE_NO_DUPS        # Don't write duplicates
+setopt HIST_REDUCE_BLANKS       # Remove superfluous blanks
+setopt HIST_VERIFY              # Don't execute immediately
+setopt HIST_BEEP                # Beep on history errors
 
 # ============================================================================
 # ZINIT PLUGIN MANAGER SETUP
@@ -154,24 +150,20 @@ source "$ZINIT_HOME/zinit.zsh"
 # PLUGINS AND COMPLETIONS
 # ============================================================================
 
-# Load essential plugins
-zinit wait lucid for \
-    atinit"ZINIT[COMPINIT_OPTS]=-C; zicompinit; zicdreplay" \
+# Load completions early with turbo mode
+zinit wait lucid light-mode for \
+    atinit"zicompinit; zicdreplay" \
         zdharma-continuum/fast-syntax-highlighting \
-    blockf \
-        zsh-users/zsh-completions \
     atload"!_zsh_autosuggest_start" \
-        zsh-users/zsh-autosuggestions
-
-# fzf-tab for better tab completion
-zinit load Aloxaf/fzf-tab
-
-# Additional useful plugins
-zinit wait lucid for \
-    atload"zicompinit; zicdreplay" blockf \
+        zsh-users/zsh-autosuggestions \
+    blockf atpull'zinit creinstall -q .' \
         zsh-users/zsh-completions
 
-# Oh-My-Zsh plugins (as snippets)
+# fzf-tab for beautiful tab completion (load after completions)
+zinit wait lucid for \
+    Aloxaf/fzf-tab
+
+# Additional useful plugins (loaded with turbo)
 zinit wait lucid for \
     OMZP::git \
     OMZP::sudo \
@@ -179,13 +171,22 @@ zinit wait lucid for \
     OMZP::colored-man-pages \
     OMZP::extract
 
-# Conditional Oh-My-Zsh plugins
-[[ -f /etc/arch-release ]] && zinit snippet OMZP::archlinux
-command -v aws >/dev/null && zinit snippet OMZP::aws
-command -v kubectl >/dev/null && zinit snippet OMZP::kubectl
-command -v kubectx >/dev/null && zinit snippet OMZP::kubectx
-command -v docker >/dev/null && zinit snippet OMZP::docker
-command -v docker-compose >/dev/null && zinit snippet OMZP::docker-compose
+# Conditional plugins (turbo loaded)
+[[ -f /etc/arch-release ]] && zinit wait lucid for OMZP::archlinux
+command -v aws >/dev/null && zinit wait lucid for OMZP::aws
+command -v kubectl >/dev/null && zinit wait lucid for OMZP::kubectl
+command -v docker >/dev/null && zinit wait lucid for OMZP::docker
+command -v docker-compose >/dev/null && zinit wait lucid for OMZP::docker-compose
+
+# ============================================================================
+# ZSH-AUTOSUGGESTIONS CONFIGURATION
+# ============================================================================
+
+# Catppuccin Mocha colors for autosuggestions
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=#6c7086'  # Overlay0 from Catppuccin Mocha
+ZSH_AUTOSUGGEST_STRATEGY=(history completion)
+ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20
+ZSH_AUTOSUGGEST_USE_ASYNC=true
 
 # ============================================================================
 # COMPLETION SYSTEM
@@ -215,13 +216,55 @@ zstyle ':completion:*:*:*:*:processes' command "ps -u $USER -o pid,user,comm -w 
 # Disable sort when completing git checkout
 zstyle ':completion:*:git-checkout:*' sort false
 
-# fzf-tab configuration
+# ============================================================================
+# FZF-TAB CONFIGURATION (Beautiful Catppuccin Theme)
+# ============================================================================
+
+# Catppuccin Mocha colors for fzf-tab groups
+FZF_TAB_GROUP_COLORS=(
+    $'\033[38;5;147m'  # Mauve
+    $'\033[38;5;117m'  # Blue
+    $'\033[38;5;150m'  # Green
+    $'\033[38;5;180m'  # Yellow
+    $'\033[38;5;210m'  # Pink
+    $'\033[38;5;203m'  # Red
+    $'\033[38;5;122m'  # Teal
+    $'\033[38;5;215m'  # Peach
+)
+
+zstyle ':fzf-tab:*' group-colors $FZF_TAB_GROUP_COLORS
+zstyle ':fzf-tab:*' switch-group '<' '>'
 zstyle ':fzf-tab:*' fzf-command ftb-tmux-popup
 zstyle ':fzf-tab:*' popup-min-size 80 12
 zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -1a --color=always $realpath 2>/dev/null || ls -la --color=always $realpath'
 zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'eza -1a --color=always $realpath 2>/dev/null || ls -la --color=always $realpath'
 zstyle ':fzf-tab:complete:kill:argument-rest' fzf-preview 'ps --pid=$word -o cmd --no-headers -w -w'
 zstyle ':fzf-tab:complete:kill:argument-rest' fzf-flags '--preview-window=down:3:wrap'
+
+# Git previews
+zstyle ':fzf-tab:complete:git-(add|diff|restore):*' fzf-preview \
+    'git diff --color=always $word | delta 2>/dev/null || git diff --color=always $word'
+zstyle ':fzf-tab:complete:git-log:*' fzf-preview \
+    'git log --color=always --oneline --graph --date=short --pretty="format:%C(auto)%cd %h%d %s" $word'
+zstyle ':fzf-tab:complete:git-help:*' fzf-preview \
+    'git help $word | bat -plman --color=always 2>/dev/null || git help $word'
+zstyle ':fzf-tab:complete:git-show:*' fzf-preview \
+    'git show --color=always $word | delta 2>/dev/null || git show --color=always $word'
+zstyle ':fzf-tab:complete:git-checkout:*' fzf-preview \
+    'git log --color=always --oneline --graph --date=short --pretty="format:%C(auto)%cd %h%d %s" $word'
+
+# Kill process preview
+zstyle ':fzf-tab:complete:(kill|ps):argument-rest' fzf-preview \
+    '[[ $group == "[process ID]" ]] && ps --pid=$word -o cmd --no-headers -w -w'
+zstyle ':fzf-tab:complete:(kill|ps):argument-rest' fzf-flags '--preview-window=down:3:wrap'
+
+# Systemd preview
+zstyle ':fzf-tab:complete:systemctl-*:*' fzf-preview 'SYSTEMD_COLORS=1 systemctl status $word'
+
+# Man pages preview
+zstyle ':fzf-tab:complete:(-command-|-parameter-|-brace-parameter-|export|unset|expand):*' \
+    fzf-preview 'echo ${(P)word}'
+zstyle ':fzf-tab:complete:man:*' fzf-preview 'man $word | bat -plman --color=always 2>/dev/null || man $word'
 
 # ============================================================================
 # KEYBINDINGS
@@ -231,10 +274,14 @@ zstyle ':fzf-tab:complete:kill:argument-rest' fzf-flags '--preview-window=down:3
 bindkey -e
 
 # History search
-bindkey '^p' history-search-backward
-bindkey '^n' history-search-forward
-bindkey '^[[A' history-search-backward  # Up arrow
-bindkey '^[[B' history-search-forward   # Down arrow
+autoload -Uz up-line-or-beginning-search down-line-or-beginning-search
+zle -N up-line-or-beginning-search
+zle -N down-line-or-beginning-search
+
+bindkey '^p' up-line-or-beginning-search
+bindkey '^n' down-line-or-beginning-search
+bindkey '^[[A' up-line-or-beginning-search  # Up arrow
+bindkey '^[[B' down-line-or-beginning-search   # Down arrow
 bindkey '^r' history-incremental-search-backward
 bindkey '^s' history-incremental-search-forward
 
@@ -267,7 +314,7 @@ alias c='clear'
 alias cls='printf "\033c"'  # Complete terminal reset
 alias h='history'
 alias j='jobs -l'
-alias reload='source ~/.zshrc'
+alias reload='exec zsh'
 
 # Weather
 alias w='weather'
@@ -280,20 +327,20 @@ alias .....='cd ../../../..'
 alias ......='cd ../../../../..'
 alias -- -='cd -'  # Previous directory
 
-# ls and eza (preserving original behavior)
+# Modern ls with eza (icon support!)
 if command -v eza >/dev/null 2>&1; then
-    alias ls='eza --color=always --group-directories-first'
-    alias ll='eza -l --sort=modified --icons --git --group-directories-first'     # Your original: ls -lt
-    alias lla='eza -la --sort=modified --icons --git --group-directories-first'   # Your original: ls -alt
+    alias ls='eza --color=always --group-directories-first --icons'
+    alias ll='eza -l --sort=modified --icons --git --group-directories-first --header'
+    alias lla='eza -la --sort=modified --icons --git --group-directories-first --header'
     alias l='eza -l --icons --git -a --group-directories-first'
     alias lt='eza --tree --level=2 --long --icons --git'
     alias ltt='eza --tree --level=4 --long --icons --git'
-    alias la='tree'                                                               # Your original: just tree
+    alias la='eza --tree --level=2 --icons'
     alias lta='eza --tree --level=4 --icons -a'
 else
-    # Fallback to your exact original aliases
-    alias ll='ls -lt --color'
-    alias lla='ls -alt --color'
+    # Fallback with colors
+    alias ll='ls -lt --color=auto'
+    alias lla='ls -alt --color=auto'
     alias la='tree'
     alias ls='ls --color=auto --group-directories-first'
     alias l='ls -l --color=auto'
@@ -306,24 +353,24 @@ alias vim='nvim'
 alias e='$EDITOR'
 
 # File operations
-alias cp='cp -i'                                                # Confirm before overwriting
-alias mv='mv -i'                                                # Confirm before overwriting
-alias rm='rm -i'                                                # Confirm before removing
-alias ln='ln -i'                                                # Confirm before overwriting
+alias cp='cp -iv'
+alias mv='mv -iv'
+alias rm='rm -Iv'
+alias ln='ln -iv'
 
 # Better defaults
-alias df='df -h'                                                # Human-readable sizes
-alias du='du -h'                                                # Human-readable sizes
-alias free='free -h'                                            # Human-readable sizes
-alias ps='ps auxf'                                              # Full format listing
-alias psg='ps aux | grep -v grep | grep -i -E --color=auto'     # Search processes
-alias mkdir='mkdir -pv'                                         # Create parent directories as needed
+alias df='df -h --output=source,fstype,size,used,avail,pcent,target'
+alias du='du -h'
+alias free='free -h'
+alias ps='ps auxf'
+alias psg='ps aux | grep -v grep | grep -i -E --color=auto'
+alias mkdir='mkdir -pv'
 
 # Network
 alias ping='ping -c 5'
 alias ports='netstat -tulanp'
 alias myip='curl -s http://ipecho.net/plain; echo'
-alias localip="ifconfig | grep 'inet ' | grep -v 127.0.0.1 | cut -d\  -f2"
+alias localip="ip -4 -br -c addr show | grep UP"
 
 # System monitoring
 alias htop='htop -C'
@@ -338,7 +385,8 @@ alias chmod='chmod --preserve-root'
 alias chgrp='chgrp --preserve-root'
 
 # Better cat
-command -v bat >/dev/null 2>&1 && alias cat='bat --paging=never'
+command -v bat >/dev/null 2>&1 && alias cat='bat --paging=never --style=plain'
+command -v bat >/dev/null 2>&1 && alias catt='bat --paging=always'
 
 # Git aliases
 alias g='git'
@@ -366,10 +414,9 @@ alias gre='git reset'
 alias greh='git reset --hard'
 alias grt='git remote'
 alias grv='git remote -v'
-alias gs='git status'
+alias gs='git status -sb'
 alias gst='git status'
-alias gss='git status -s'
-alias glog='git log --graph --topo-order --pretty="%w(100,0,6)%C(yellow)%h%C(bold)%C(black)%d %C(cyan)%ar %C(green)%an%n%C(bold)%C(white)%s %N" --abbrev-commit'
+alias glog='git log --graph --pretty=format:"%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset" --abbrev-commit'
 alias glg='git log --stat'
 alias glgg='git log --graph --decorate --oneline'
 alias gsh='git show'
@@ -408,6 +455,7 @@ if command -v kubectl >/dev/null 2>&1; then
     alias kd='kubectl describe'
     alias kdel='kubectl delete'
     alias kl='kubectl logs -f'
+    alias kgp='kubectl get pods'
     alias kgpo='kubectl get pod'
     alias kgd='kubectl get deployments'
     alias kgs='kubectl get services'
@@ -440,7 +488,15 @@ if command -v fzf >/dev/null 2>&1; then
     eval "$(fzf --zsh)"
 
     # Custom fzf configuration
-    export FZF_DEFAULT_OPTS="--height 40% --layout=reverse --border --inline-info --preview-window=right:60%:wrap"
+        export FZF_DEFAULT_OPTS=" \
+        --color=bg+:#313244,bg:#1e1e2e,spinner:#f5e0dc,hl:#f38ba8 \
+        --color=fg:#cdd6f4,header:#f38ba8,info:#cba6f7,pointer:#f5e0dc \
+        --color=marker:#f5e0dc,fg+:#cdd6f4,prompt:#cba6f7,hl+:#f38ba8 \
+        --height 60% --layout=reverse --border=rounded --inline-info \
+        --preview-window=right:60%:wrap \
+        --bind='ctrl-/:toggle-preview' \
+        --bind='ctrl-u:preview-half-page-up' \
+        --bind='ctrl-d:preview-half-page-down'"
 
     # Use fd if available, otherwise fall back to find
     if command -v fd >/dev/null 2>&1; then
@@ -453,9 +509,14 @@ if command -v fzf >/dev/null 2>&1; then
         export FZF_ALT_C_COMMAND='find . -type d -not -path "*/\.git/*" 2>/dev/null'
     fi
 
-    # fzf preview commands
-    export FZF_CTRL_T_OPTS="--preview 'bat --color=always --line-range :500 {}'"
-    export FZF_ALT_C_OPTS="--preview 'tree -C {} | head -100'"
+        # Preview commands with colors
+    export FZF_CTRL_T_OPTS="
+        --preview 'bat --color=always --style=numbers --line-range=:500 {} 2>/dev/null || cat {} 2>/dev/null || tree -C {} | head -100'
+        --bind 'ctrl-/:change-preview-window(down|hidden|)'"
+
+    export FZF_ALT_C_OPTS="
+        --preview 'eza --tree --level=2 --color=always --icons {} 2>/dev/null || tree -C {} | head -100'
+        --bind 'ctrl-/:change-preview-window(down|hidden|)'"
 fi
 
 # zoxide integration (better cd)
@@ -486,22 +547,13 @@ fi
 # LANGUAGE MANAGERS
 # ============================================================================
 
-# Node Version Manager (NVM)
-export NVM_DIR="$HOME/.nvm"
-if [[ -s "$NVM_DIR/nvm.sh" ]]; then
-    # Lazy load NVM for faster shell startup
-    nvm() {
-        unset -f nvm
-        [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-        [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
-        nvm "$@"
-    }
+# MISE version manager
+if [[ -f "$HOME/.local/bin/mise" ]]; then
+    eval "$(~/.local/bin/mise activate zsh)"
 fi
 
 # Deno
-if [[ -f "$HOME/.deno/env" ]]; then
-    source "$HOME/.deno/env"
-fi
+[[ -f "$HOME/.deno/env" ]] && source "$HOME/.deno/env"
 
 # Python pyenv
 if command -v pyenv >/dev/null 2>&1; then
@@ -520,7 +572,8 @@ fi
 
 # Create directory and cd into it
 mkcd() {
-    mkdir -p "$1" && cd "$1"
+    mkdir -p "$1" && cd "$1" || return
+    echo "\033[32m✓\033[0m Created and entered: \033[1m$1\033[0m"
 }
 
 # Better find function
@@ -613,7 +666,7 @@ sysinfo() {
 
 # Git clone and cd
 gclone() {
-    git clone "$1" && cd "$(basename "$1" .git)"
+    git clone "$1" && cd "$(basename "$1" .git)" || return
 }
 
 # Create React app and cd

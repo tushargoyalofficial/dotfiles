@@ -1,43 +1,44 @@
-# font
-font-family = JetBrainsMono Nerd Font Mono
-font-size = 12
-adjust-cell-height = 35%
+# Core Behaviour
+shell-integration = zsh
+shell-integration-features = no-cursor,sudo,no-title
+confirm-close-surface = false
 
-# clipboard
+# Fonts
+font-family = Maple Mono NF
+font-size = 14
+adjust-cell-height = 35%
+font-thicken = true
+
+# Theme & Effects
+theme = TokyoNight
+background-opacity = 0.8
+background-blur-radius = 80
+cursor-style = bar
+cursor-style-blink = false
+auto-update = check
+
+# Clipbaard
 clipboard-read = allow
 clipboard-write = allow
 clipboard-trim-trailing-spaces = true
 copy-on-select = true
 
-# ui
-theme = catppuccin-mocha
-cursor-style = block
-background-opacity = 0.6
-background-blur-radius = 20
-auto-update = check
-
-# mouse
+# Mouse 
 mouse-hide-while-typing = true
 mouse-scroll-multiplier = 2
 
-# window
+# Window
 window-width = 140
 window-height = 30
 window-decoration = true
 window-padding-balance = true
 window-save-state = always
-window-colorspace = "display-p3"
+window-colorspace = display-p3
 macos-titlebar-style = transparent
+macos-icon = official
+quick-terminal-position = top
 
-# tabs
-keybind = ctrl+s>c=new_tab
-keybind = ctrl+s>shift+l=next_tab
-keybind = ctrl+s>shift+h=previous_tab
-keybind = ctrl+s>comma=move_tab:-1
-keybind = ctrl+s>period=move_tab:1
-
-
-# quick tab switch
+# Leader: ctrl+space (Quick Tab Switching)
 keybind = ctrl+space>1=goto_tab:1
 keybind = ctrl+space>2=goto_tab:2
 keybind = ctrl+space>3=goto_tab:3
@@ -48,7 +49,14 @@ keybind = ctrl+space>7=goto_tab:7
 keybind = ctrl+space>8=goto_tab:8
 keybind = ctrl+space>9=goto_tab:9
 
-# split
+# Leader: ctrl+space (Tabs)
+keybind = ctrl+space>c=new_tab
+keybind = ctrl+space>shift+l=next_tab
+keybind = ctrl+space>shift+h=previous_tab
+keybind = ctrl+space>comma=move_tab:-1
+keybind = ctrl+space>period=move_tab:1
+
+# Leader: ctrl+space (Splits & Navigation)
 keybind = ctrl+space>\=new_split:right
 keybind = ctrl+space>-=new_split:down
 keybind = ctrl+space>j=goto_split:bottom
@@ -58,10 +66,7 @@ keybind = ctrl+space>l=goto_split:right
 keybind = ctrl+space>z=toggle_split_zoom
 keybind = ctrl+space>e=equalize_splits
 
-# others
-quick-terminal-position = top
-shell-integration-features = no-cursor,sudo,no-title
-shell-integration = zsh
+# System & App
 keybind = global:ctrl+grave_accent=toggle_quick_terminal
 keybind = ctrl+space>r=reload_config
 keybind = ctrl+space>x=close_surface

@@ -7,8 +7,8 @@ return {
 				sources = {
 					explorer = {
 						layout = { layout = { position = "right" } },
-						hidden = true,
-						ignored = true,
+						hidden = true, -- Shows dotfiles like .env, .gitignore, .github
+						ignored = true, -- Shows files ignored by .gitignore (like node_modules)
 					},
 				},
 			},
